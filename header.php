@@ -27,6 +27,7 @@
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
+
 <?php
 	$product_tour_enabled = et_builder_is_product_tour_enabled();
 	$page_container_style = $product_tour_enabled ? ' style="padding-top: 0px;"' : ''; ?>
@@ -350,11 +351,17 @@
 		 */
 		echo et_core_intentionally_unescaped( apply_filters( 'et_html_main_header', $main_header ), 'html' );
 	?>
+	
+	
+	
 		<div id="et-main-area">
-	<?php
-		/**
-		 * Fires after the header, before the main content is output.
-		 *
-		 * @since 3.10
-		 */
-		do_action( 'et_before_main_content' );
+			<h1>HELLO WORLD!</h1>
+	
+	
+			<?php
+				/**
+				 * Fires after the header, before the main content is output.
+				 *
+				 * @since 3.10
+				 */
+				do_action( 'et_before_main_content' );
