@@ -1,0 +1,13 @@
+.login h1 a {
+  background-image: url('/wp-content/uploads/2018/01/highscope-logo-300x44.png');
+    background-size: auto;
+    background-position: top left;
+    height: 50px;
+    width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.woocommerce-Button {
+	font-weight: bold;
+}
