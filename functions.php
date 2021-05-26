@@ -10,12 +10,24 @@
  */
 
 
+// Setting a CONSTANT for the plugin dir path
+define('THIS_THEME', get_stylesheet_directory());
+
+require THIS_THEME . '/includes/formstack.php';
+
+
+
+
 
 add_action( 'wp_enqueue_scripts', 'highscope_enqueue_styles' );
 
 // Redirect on login to Membership Account page
 add_filter( 'login_redirect', 'highscope_on_login_redirect', 10, 3 );
 
+add_action('login_form_register', 'custom_login_form_register');
+
+// Remove error for username, only show error for email only.
+add_filter('registration_errors', 'custom_registration_errors', 10, 3);
 
 /** form stack **/
 add_shortcode('formstack-keep-abreast', 'formstack_keep_abreast_function');
@@ -24,10 +36,10 @@ add_shortcode('formstack-tickets', 'formstack_tickets_function');
 add_shortcode('formstack-sponsors', 'formstack_sponsors_function');
 add_shortcode('formstack-auction-donations', 'formstack_auction_donations_function');
 
-
-
-
 add_action('admin_head', 'myprefix_admin_js');
+
+/* Using email address as username for signups */
+add_action('login_head', 'custom_login_head');
 
 // Ensure that Divi Builder framework is loaded - required for some post types when using Divi Builder plugin
 add_filter('et_divi_role_editor_page', 'myprefix_load_builder_on_all_page_types');
@@ -40,10 +52,6 @@ add_action( 'wp', 'divi_child_theme_setup', 9999 );
  * Change the breadcrumb separator
  */
 add_filter( 'woocommerce_breadcrumb_defaults', 'wcc_change_breadcrumb_delimiter' );
-
-
-
-
 
 /* WooCommerce image sizing */
 add_theme_support( 'woocommerce', array('single_image_width' => 200) );
@@ -66,87 +74,25 @@ function highscope_on_login_redirect( $url, $query, $user ) {
 	return '/membership-account';
 }
 
-
-
-
-
-
-// Custom formstack shortcodes
-// [formstack-keep-abreast]
-function formstack_keep_abreast_function() {
-     return '<script type="text/javascript" src="https://HighScope.formstack.com/forms/js.php/keep_abreast"></script><noscript><a href="https://HighScope.formstack.com/forms/keep_abreast" title="Online Form">Online Form - Keep Abreast of Anniversary Activities & Events</a></noscript><div style="text-align:right; font-size:x-small;"></div>';
+function wcc_change_breadcrumb_delimiter( $defaults ) {
+	$defaults['delimiter'] = '<span class="addSpace">&#9632;</span>';
+	return $defaults;
 }
 
 
 
 
 
-
-
-
-//[formstack-annual-giving]
-function formstack_annual_giving_function() {
-     return '<script type="text/javascript" src="https://HighScope.formstack.com/forms/js.php/annual_giving"></script><noscript><a href="https://HighScope.formstack.com/forms/annual_giving" title="Online Form">Online Form - Annual Giving </a></noscript>';
+// Changed to echo - jbernal, 2021-5-25
+function custom_login_head() {
+	
+	$string = file_get_contents(THIS_THEME . '/includes/head.html');
+	echo $string;
 }
 
 
 
-
-
-//[formstack-tickets]
-function formstack_tickets_function() {
-     return '<script type="text/javascript" src="https://HighScope.formstack.com/forms/js.php/tickets"></script><noscript><a href="https://HighScope.formstack.com/forms/tickets" title="Online Form">Online Form - Gala Tickets Order Form</a></noscript><div style="text-align:right; font-size:x-small;"></div>';
-}
-
-
-
-
-
-// [formstack-sponsors]
-function formstack_sponsors_function() {
-     return '<script type="text/javascript" src="https://HighScope.formstack.com/forms/js.php/sponsors"></script><noscript><a href="https://HighScope.formstack.com/forms/sponsors" title="Online Form">Online Form - Gala Sponsorship Options</a></noscript><div style="text-align:right; font-size:x-small;"></div>';
-}
-
-
-
-
-
-// [formstack-auction-donations]
-function formstack_auction_donations_function() {
-     return '<script type="text/javascript" src="https://HighScope.formstack.com/forms/js.php/auction_donations"></script><noscript><a href="https://HighScope.formstack.com/forms/auction_donations" title="Online Form">Online Form - Gala Auction Donations</a></noscript><div style="text-align:right; font-size:x-small;"></div>';
-}
-
-
-
-?>
-
-
-
-<?php
-/* Using email address as username for signups */
-add_action('login_head', function(){
-?>
-    <style>
-        #registerform > p:first-child{
-            display:none;
-        }
-    </style>
-
-    <script type="text/javascript" src="<?php echo site_url('/wp-includes/js/jquery/jquery.js'); ?>"></script>
-    <script type="text/javascript">
-        jQuery(document).ready(function($){
-            $('#registerform > p:first-child').css('display', 'none');
-        });
-    </script>
-<?php }); ?>
-
-
-
-<?php
-
-
-// Remove error for username, only show error for email only.
-add_filter('registration_errors', function($wp_error, $sanitized_user_login, $user_email){
+function custom_registration_errors($wp_error, $sanitized_user_login, $user_email){
     if(isset($wp_error->errors['empty_username'])){
         unset($wp_error->errors['empty_username']);
     }
@@ -155,29 +101,16 @@ add_filter('registration_errors', function($wp_error, $sanitized_user_login, $us
         unset($wp_error->errors['username_exists']);
     }
     return $wp_error;
-}, 10, 3);
+}
 
 
 
-
-add_action('login_form_register', function(){
+/* end of email as username */
+function custom_login_form_register(){
     if(isset($_POST['user_login']) && isset($_POST['user_email']) && !empty($_POST['user_email'])){
         $_POST['user_login'] = $_POST['user_email'];
     }
-});
-/* end of email as username */
-
-
-
-
-
-
-
-
-
-
-
-
+}
 
 
 /* Enable Divi Builder on all post types with an editor box */
@@ -189,12 +122,6 @@ function myprefix_add_post_types($post_types) {
 	} 
 	return $post_types;
 }
-
-
-
-
-
-
 
 
 /* Add Divi Custom Post Settings box */
@@ -223,22 +150,9 @@ function myprefix_load_builder_on_all_page_types($page) {
 }
 
 
-
-
-
-
 function custom_login_page() {
 	echo '<link rel="stylesheet" type="text/css" href="' . get_bloginfo('stylesheet_directory') . '/login/custom-login-styles.css" />';
 }
-
-
-
-
-
-
-
-
-
 
 function divi_child_theme_setup() {
     if ( ! class_exists('ET_Builder_Module') ) {
@@ -254,10 +168,6 @@ function divi_child_theme_setup() {
 
 
 
-function wcc_change_breadcrumb_delimiter( $defaults ) {
-	$defaults['delimiter'] = '<span class="addSpace">&#9632;</span>';
-	return $defaults;
-}
 
 
 
