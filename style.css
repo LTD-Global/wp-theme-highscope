@@ -14,6 +14,21 @@
 	text-decoration: underline;
 } */
 
+.menu-store-catalog-container {
+	text-align: right;
+	margin-top:30px;
+}
+.menu-store-catalog-container li {
+	display:inline-block;
+	vertical-align:top;
+	margin-right: 18px;
+}
+
+.menu-store-catalog-container .sub-menu {
+	display:none;
+}
+
+
 .et-social-linkedin a.icon:before { content: '\e09d'; }
 
 

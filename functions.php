@@ -60,6 +60,14 @@ add_action('add_meta_boxes', 'myprefix_add_meta_boxes');
 
 
 
+// https://developer.wordpress.org/reference/functions/wp_nav_menu/
+// https://developer.wordpress.org/reference/functions/get_template_part/
+register_nav_menus(
+	array(
+		'store-nav' => __('Store Nav', 'highscope')
+	)
+);
+
 
 
 
