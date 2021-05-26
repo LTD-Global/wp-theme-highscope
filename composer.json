@@ -1,0 +1,8 @@
+{
+    "name": "ocdladefense/wp-theme-highscope",
+    "description": "Custom HighScope theme for WordPress.",
+    "type": "wordpress-theme",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {}
+}
