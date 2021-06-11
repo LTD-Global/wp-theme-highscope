@@ -183,9 +183,11 @@ function highscope_enqueue_styles() {
 	$woodir = get_stylesheet_directory_uri()."/woocommerce/styles";
 	
 
-	
+	// Optional, *organized CSS files to be loaded.
+	// Currently these are not being loaded and there
+	// is a monolithic CSS file :/
 	$theme = array(
-		'home' => 'home.css',
+		// 'home' => 'home.css',
 		// 'main' => 'main.css',
 		// 'structure' => 'structure.css',
 		// 'sidebar' => 'sidebar.css',
@@ -210,15 +212,11 @@ function highscope_enqueue_styles() {
 		"woocommerce-layout",
 		"woocommerce-smallscreen"
 	);
+	
 	foreach($woocommerce as $id => $uri) {
 		$path = $woodir . "/" . $uri;
 		wp_enqueue_style($id, $path, $dependencies);
 	}
-	
-	
-	global $wp_styles;
-	
-//	var_dump($wp_styles);exit;
 }
 
 
