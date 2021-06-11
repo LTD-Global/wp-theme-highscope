@@ -6,7 +6,7 @@
  * Description: Theme as delivered to LTD Global on 4/16/2021.
  * Comment: theme functions seem to be missing the appropriate prefixes.
  *
- *
+ * https://docs.woocommerce.com/document/conditional-tags/
  */
 
 
@@ -19,7 +19,7 @@ require THIS_THEME . '/includes/formstack.php';
 
 
 
-add_action( 'wp_enqueue_scripts', 'highscope_enqueue_styles' );
+add_action( 'wp_enqueue_scripts', 'highscope_enqueue_styles', 1000);
 
 // Redirect on login to Membership Account page
 add_filter( 'login_redirect', 'highscope_on_login_redirect', 10, 3 );
@@ -74,9 +74,6 @@ register_nav_menus(
 
 
 
-function highscope_enqueue_styles() { 
-    wp_enqueue_style( 'parent-style', get_template_directory_uri() . '/style.css' );
-}
 
 function highscope_on_login_redirect( $url, $query, $user ) {
 	return '/membership-account';
@@ -174,7 +171,55 @@ function divi_child_theme_setup() {
 
 
 
+// Visual Guide to Checkout Page
+// https://www.businessbloomer.com/woocommerce-visual-hook-guide-checkout-page/
 
+// https://docs.woocommerce.com/document/disable-the-default-stylesheet/
+// add_filter( 'woocommerce_enqueue_styles', '__return_false' );
+
+function highscope_enqueue_styles() { 
+
+	$basedir = get_stylesheet_directory_uri()."/styles";
+	$woodir = get_stylesheet_directory_uri()."/woocommerce/styles";
+	
+
+	
+	$theme = array(
+		'home' => 'home.css',
+		// 'main' => 'main.css',
+		// 'structure' => 'structure.css',
+		// 'sidebar' => 'sidebar.css',
+		// 'header' => 'header.css',
+		// 'menu' => 'menu.css',
+		// 'menu-accordion' => 'menu-accordion.css',
+		// 'post' => 'post.css',
+		// 'footer' => 'footer.css',
+		// 'overlay' => 'overlay.css'
+	);
+	
+	$woocommerce = array(
+		"highscope-cart" => "cart.css",
+		"highscope-checkout" => "checkout.css"
+	);
+	
+	
+	wp_enqueue_style( 'parent-style', get_template_directory_uri() . '/style.css' );
+
+	$dependencies = array(
+		"woocommerce-general",
+		"woocommerce-layout",
+		"woocommerce-smallscreen"
+	);
+	foreach($woocommerce as $id => $uri) {
+		$path = $woodir . "/" . $uri;
+		wp_enqueue_style($id, $path, $dependencies);
+	}
+	
+	
+	global $wp_styles;
+	
+//	var_dump($wp_styles);exit;
+}
 
 
 

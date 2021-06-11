@@ -1,0 +1,35 @@
+/**
+ * Standard WooCommerce overrides to format the checkout page.
+ *
+ * @author - LTD Global
+ * @updated - 2021-05-28
+ *
+ */
+ 
+ 
+ 
+/**
+ * Default widescreen layout places Billing and Shipping addresses side-by-side in separate columns.
+ *  Instead, let's keep a linearized layout, as with mobile.
+ */
+.col2-set {}
+
+
+.woocommerce .col2-set .col-1,
+.woocommerce-page .col2-set .col-1 {
+	float:none;
+	width:auto;
+}
+
+.woocommerce .col2-set .col-2,
+.woocommerce-page .col2-set .col-2 {
+	float:none;
+	width:auto;
+}
+
+
+
+
+.woocommerce-additional-fields {
+
+}
